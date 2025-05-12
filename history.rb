@@ -1,6 +1,6 @@
 
 class History
-  attr_accessor :@plays, :@opponent_plays, :@score
+  attr_accessor :plays, :opponent_plays, :score
   def initialize
     @score = 0
     @opponent_plays = Array.new
