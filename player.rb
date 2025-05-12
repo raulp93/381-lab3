@@ -13,6 +13,7 @@ class Player
   end
 end
 
+# Stupid Bot subclass definition
 
 class StupidBot < Player
   def play
@@ -22,7 +23,7 @@ class StupidBot < Player
   end
 end
 
-
+# Random Bot subclass definition
 class RandomBot < Player
   def play
     possible_moves = [Rock.new("Rock"),
@@ -37,7 +38,7 @@ class RandomBot < Player
     end
 end
 
-
+# Iterative Bot subclass definition
 class IterativeBot < Player
 
   def initialize(name, history)
@@ -61,15 +62,33 @@ class IterativeBot < Player
 end
 
 
+class LastPlayBot < Player
+  def play
+    if @history.opponent_plays.length == 0
+      move = Rock.new("Rock")
+    else
+      move = @history.opponent_plays.last
+    end
+
+    @history.log_play(move)
+    return move
+  end
+end
+
+
+
 # Local tests
 #
-bot1 = StupidBot.new('StupidBot', History.new)
-bot2 = IterativeBot.new('IterativeBot', History.new)
+bot1 = RandomBot.new('RandomBot', History.new)
+bot2 = LastPlayBot.new('LastPlayBot', History.new)
 
 
 
-(1..10).each { |i|
+(1..5).each { |i|
   bot1move = bot1.play
   bot2move = bot2.play
+  bot1.history.log_opponent_play(bot2move)
+  bot2.history.log_opponent_play(bot1move)
+  puts "RandomBot played #{bot1move.name}, LastPlayBot played #{bot2move.name}"
   puts bot2move.compare_to(bot1move)
 }
