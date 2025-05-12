@@ -76,12 +76,47 @@ class LastPlayBot < Player
 end
 
 
+class Human < Player
 
+  def get_input
+    @valid_move = false
+    while @valid_move === false
+      puts "(1) Rock"
+      puts "(2) Paper"
+      puts "(3) Scissors"
+      puts "(4) Lizard"
+      puts "(5) Spock"
+      print "Enter your move: "
+      choice = gets.chomp
+      if choice =~ /^\d$/ && choice.to_i.between?(1, 5)
+        @valid_move = true
+        break
+      else
+        puts "Invalid move - try again"
+      end
+    end
+    return choice.to_i
+  end
+
+  def play
+    choice = get_input
+    possible_moves = [Rock.new("Rock"),
+                      Paper.new("Paper"),
+                      Scissors.new("Scissors"),
+                      Lizard.new("Lizard"),
+                      Spock.new("Spock")
+    ]
+    move = possible_moves[choice - 1]
+    @history.log_play(move)
+    return move
+  end
+end
+
+#####################################################################################################################
 # Local tests
 #
 bot1 = RandomBot.new('RandomBot', History.new)
-bot2 = LastPlayBot.new('LastPlayBot', History.new)
-
+bot2 = Human.new('Raul', History.new)
 
 
 (1..5).each { |i|
@@ -89,6 +124,6 @@ bot2 = LastPlayBot.new('LastPlayBot', History.new)
   bot2move = bot2.play
   bot1.history.log_opponent_play(bot2move)
   bot2.history.log_opponent_play(bot1move)
-  puts "RandomBot played #{bot1move.name}, LastPlayBot played #{bot2move.name}"
+  puts "RandomBot played #{bot1move.name}, Raul played #{bot2move.name}"
   puts bot2move.compare_to(bot1move)
 }
