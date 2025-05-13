@@ -115,15 +115,15 @@ end
 #####################################################################################################################
 # Local tests
 #
-bot1 = RandomBot.new('RandomBot', History.new)
-bot2 = Human.new('Raul', History.new)
-
-
-(1..5).each { |i|
-  bot1move = bot1.play
-  bot2move = bot2.play
-  bot1.history.log_opponent_play(bot2move)
-  bot2.history.log_opponent_play(bot1move)
-  puts "RandomBot played #{bot1move.name}, Raul played #{bot2move.name}"
-  puts bot2move.compare_to(bot1move)
-}
+# bot1 = RandomBot.new('RandomBot', History.new)
+# bot2 = Human.new('Raul', History.new)
+#
+#
+# (1..5).each { |i|
+#   bot1move = bot1.play
+#   bot2move = bot2.play
+#   bot1.history.log_opponent_play(bot2move)
+#   bot2.history.log_opponent_play(bot1move)
+#   puts "RandomBot played #{bot1move.name}, Raul played #{bot2move.name}"
+#   puts bot2move.compare_to(bot1move)
+# }
