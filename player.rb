@@ -1,7 +1,8 @@
+require_relative 'element'
+require_relative 'history'
 
+# This Player class is serve as the base superclass for the rest of the player classes
 class Player
-  require_relative 'element'
-  require_relative 'history'
   attr_reader :name, :history
   def initialize(name, history)
     @name = name
@@ -12,6 +13,11 @@ class Player
     fail "This message should be overwritten"
   end
 end
+
+# The rest of the file below contains class definitions for each different type
+# of player that a user can choose
+# Note that $moves is a global array defined in element.rb that contains
+# each move-object (rock, paper,scissors, etc...)
 
 # Stupid Bot subclass definition
 
@@ -26,13 +32,7 @@ end
 # Random Bot subclass definition
 class RandomBot < Player
   def play
-    possible_moves = [Rock.new("Rock"),
-                      Paper.new("Paper"),
-                      Scissors.new("Scissors"),
-                      Lizard.new("Lizard"),
-                      Spock.new("Spock")
-                      ]
-    selected_move = possible_moves.shuffle[0]
+    selected_move = $moves.sample
     @history.log_play(selected_move)
     return selected_move
     end
@@ -43,33 +43,30 @@ class IterativeBot < Player
 
   def initialize(name, history)
     super(name, history)
+    # used to keep track of which move ($moves[0-4]) is next to play
     @move_index = 0
   end
 
   def play
-    possible_moves = [Rock.new("Rock"),
-                      Paper.new("Paper"),
-                      Scissors.new("Scissors"),
-                      Lizard.new("Lizard"),
-                      Spock.new("Spock")
-                      ]
+    # once move_index surpasses the valid range, it gets reset to 0
     if @move_index  > 4 then @move_index = 0 end
-    current_move = possible_moves[@move_index]
-    @history.log_play(current_move)
+    move = $moves[@move_index]
+    @history.log_play(move)
     @move_index += 1
-    return current_move
+    return move
   end
 end
 
 
 class LastPlayBot < Player
   def play
+    # history.opponent_plays is an array that gets updated during each round
+    # It will be empty in the first round.
     if @history.opponent_plays.length == 0
       move = Rock.new("Rock")
     else
       move = @history.opponent_plays.last
     end
-
     @history.log_play(move)
     return move
   end
@@ -87,7 +84,12 @@ class Human < Player
       puts "(4) Lizard"
       puts "(5) Spock"
       print "Enter your move: "
+      # I used gets.chomp instead of gets.to_i so that I can properly validate the user input.
+
+      # The use of gets.to_i would typecast any letters or decimals to an integer, effectively
+      # allowing bad inputs to slip through
       choice = gets.chomp
+      # This checks whether the input is a single digit between 1 and 5.
       if choice =~ /^\d$/ && choice.to_i.between?(1, 5)
         @valid_move = true
         break
@@ -100,30 +102,9 @@ class Human < Player
 
   def play
     choice = get_input
-    possible_moves = [Rock.new("Rock"),
-                      Paper.new("Paper"),
-                      Scissors.new("Scissors"),
-                      Lizard.new("Lizard"),
-                      Spock.new("Spock")
-    ]
-    move = possible_moves[choice - 1]
+    # $moves is the list of objects for each possible move
+    move = $moves[choice - 1]
     @history.log_play(move)
     return move
   end
 end
-
-#####################################################################################################################
-# Local tests
-#
-# bot1 = RandomBot.new('RandomBot', History.new)
-# bot2 = Human.new('Raul', History.new)
-#
-#
-# (1..5).each { |i|
-#   bot1move = bot1.play
-#   bot2move = bot2.play
-#   bot1.history.log_opponent_play(bot2move)
-#   bot2.history.log_opponent_play(bot1move)
-#   puts "RandomBot played #{bot1move.name}, Raul played #{bot2move.name}"
-#   puts bot2move.compare_to(bot1move)
-# }

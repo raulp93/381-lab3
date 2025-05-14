@@ -9,7 +9,6 @@ class Element
   def compare_to(element)
     fail "This message should be overwritten"
   end
-
 end
 
 
@@ -82,7 +81,7 @@ class Scissors < Element
       return "Scissors decapitate Lizard", "Win"
 
     when "Spock"
-      return "Spock smashes scissors", "Lose"
+      return "Spock smashes Scissors", "Lose"
 
     else
       return "Error: #{element.name} is not recognized."
@@ -141,6 +140,8 @@ class Spock < Element
     end
   end
 end
+
+# the element instances below will be used to play each game
 
 rock = Rock.new("Rock")
 paper = Paper.new("Paper")
