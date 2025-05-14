@@ -28,7 +28,7 @@ def choose_players
 		choice2 = gets.chomp
 		# Here we validate the inputs.
 		if (choice1 =~ /^\d$/ && choice1.to_i.between?(1, 5)) &&
-			(choice2 =~ /^\d$/ && choice2.to_i.between?(1, 5))
+		   (choice2 =~ /^\d$/ && choice2.to_i.between?(1, 5))
 			break
 		else
 			puts "Invalid choice(s) - start over\n\n"
@@ -53,12 +53,12 @@ def decide_round(player_1, player_2, round_results)
 			puts "Round was a tie"
 
 		when "Win"
-		puts "Player 1 won the round"
-		player_1.history.add_score
+			puts "Player 1 won the round"
+			player_1.history.add_score
 
 		when "Lose"
-		puts "Player 2 won the round"
-		player_2.history.add_score
+			puts "Player 2 won the round"
+			player_2.history.add_score
 		else
 			puts "Error: something went wrong"
 	end
@@ -90,6 +90,8 @@ def game(rounds)
 		# call .compare_to in order to see who wins the round.
 		player_1_move = player_1.play
 		player_2_move = player_2.play
+		#.history.log_opponent_play is just for keeping a record and 
+		# LastPlayBot uses it to determine it's next move.
 		player_1.history.log_opponent_play(player_2_move)
 		player_2.history.log_opponent_play(player_1_move)
 		puts "Player 1 chose #{player_1_move.name}"
